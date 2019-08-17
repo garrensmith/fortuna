@@ -1,0 +1,4 @@
+build/
+deps/v8/
+deps/depot_tools
+deps/.cipd
