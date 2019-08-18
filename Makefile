@@ -1,4 +1,4 @@
-.PHONY: init build
+.PHONY: init build clean format
 
 all: build
 
@@ -10,3 +10,5 @@ build: init
 
 clean:
 	rm -rf build
+
+format: 

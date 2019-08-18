@@ -2,13 +2,13 @@ cmake_minimum_required(VERSION 3.15)
 
 find_package(V8 HINTS ${CMAKE_SOURCE_DIR}/cmake)
 
-add_library(V8 INTERFACE)
+add_library(V8_TARGET INTERFACE)
 # add_dependencies(V8 V8Project)
-target_include_directories(V8 INTERFACE ${V8_HDRS})
+target_include_directories(V8_TARGET INTERFACE ${V8_HDRS})
 
-target_compile_features(V8 INTERFACE cxx_std_14)
+target_compile_features(V8_TARGET INTERFACE cxx_std_14)
 
-target_link_libraries(V8 INTERFACE ${V8_LIB})
-target_link_libraries(V8 INTERFACE ${V8_LIB}/libv8_libbase.a)
-target_link_libraries(V8 INTERFACE ${V8_LIB}/libv8_libplatform.a)
-target_link_libraries(V8 INTERFACE ${V8_LIB}/libv8_monolith.a)
+# target_link_libraries(V8_TARGET INTERFACE ${V8_LIB})
+target_link_libraries(V8_TARGET INTERFACE ${V8_LIB}/libv8_libbase.a)
+target_link_libraries(V8_TARGET INTERFACE ${V8_LIB}/libv8_libplatform.a)
+target_link_libraries(V8_TARGET INTERFACE ${V8_LIB}/libv8_monolith.a)

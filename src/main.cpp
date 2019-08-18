@@ -1,12 +1,10 @@
 
 #include <cstdlib>
 #include <iostream>
-#include "js.h"
+#include "V8Init.h"
 
 int main (int argc, char *argv[]) { 
     std::cout << "Hello" << std::endl;
-    JS js;
-
-
-    js.hello();
+    V8Init v8Init;
+    v8Init.initialisePlatform(argv);
 } 
