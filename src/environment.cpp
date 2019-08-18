@@ -3,15 +3,11 @@
 #include "libplatform/libplatform.h"
 
 class Environment {
-    public:
-        Environment(std::string& id): id(id) {
+public:
+  Environment(std::string &id) : id(id) { createIsolate(); }
 
-            createIsolate();
+  void createIsolate();
 
-        }
-
-    void createIsolate();
-    
-    private:
-        std::string& id;
+private:
+  std::string &id;
 };

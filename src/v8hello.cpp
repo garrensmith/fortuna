@@ -10,7 +10,7 @@
 // #include "include/libplatform/libplatform.h"
 #include "v8.h"
 
-int main(int argc, char* argv[]) {
+int main(int argc, char *argv[]) {
   // Initialize V8.
   v8::V8::InitializeICUDefaultLocation(argv[0]);
   v8::V8::InitializeExternalStartupData(argv[0]);
@@ -22,7 +22,7 @@ int main(int argc, char* argv[]) {
   v8::Isolate::CreateParams create_params;
   create_params.array_buffer_allocator =
       v8::ArrayBuffer::Allocator::NewDefaultAllocator();
-  v8::Isolate* isolate = v8::Isolate::New(create_params);
+  v8::Isolate *isolate = v8::Isolate::New(create_params);
   {
     v8::Isolate::Scope isolate_scope(isolate);
 
@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
       //       get_local 1
       //       i32.add)
       //
-      const char* csource = R"(
+      const char *csource = R"(
         let bytes = new Uint8Array([
           0x00, 0x61, 0x73, 0x6d, 0x01, 0x00, 0x00, 0x00, 0x01, 0x07, 0x01,
           0x60, 0x02, 0x7f, 0x7f, 0x01, 0x7f, 0x03, 0x02, 0x01, 0x00, 0x07,

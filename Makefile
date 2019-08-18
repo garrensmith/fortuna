@@ -12,3 +12,4 @@ clean:
 	rm -rf build
 
 format: 
+	clang-format -style=file -i src/*.cpp src/*.h tests/*.cpp
