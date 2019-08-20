@@ -9,6 +9,7 @@ include(GetDepotTools)
 add_subdirectory(deps)
 add_subdirectory(src)
 add_subdirectory(tests)
+add_subdirectory(js)
 
 # set(CMAKE_CXX_STANDARD 14)
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
