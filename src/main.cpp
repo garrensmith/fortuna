@@ -14,6 +14,6 @@ int main(int argc, char *argv[]) {
 
     // env.hello(id);
 
-    std::string fun = "function g() { }";
+    std::string fun = "function () { }";
     env.addFun(id, fun);
 }

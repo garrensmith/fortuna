@@ -12,7 +12,9 @@ function setLib(source) {
 
 function addFun(id, source) {
     print("WOO HOO");
-    const fun = eval(source);
+    const fixedSource = rewriteAnonFun(source);
+    const fun = eval(fixedSource);
+    print(fun);
     if (typeof fun === "function") {
         mapFuns.set(id, fun);
     } else {

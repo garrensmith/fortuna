@@ -4,8 +4,6 @@ set(V8_PATH ${DEPS_PATH}/v8)
 set(V8_HDRS ${V8_PATH}/include)
 set(V8_LIB ${V8_PATH}/out.gn/x64.release/obj)
 
-message("hello v8 ${V8_LIB}")
-
 if (NOT EXISTS ${V8_HDRS})
     execute_process(
         COMMAND fetch v8

@@ -11,8 +11,13 @@ target_link_libraries(hello V8_TARGET)
 
 target_compile_features(hello PRIVATE cxx_std_14)
 
+include_directories(${CMAKE_BINARY_DIR}/js)
+add_library(environment STATIC environment.h environment.cpp)
+target_link_libraries(environment PRIVATE V8_TARGET)
+add_dependencies(environment JS_HEADERS)
+
 add_executable(main main.cpp V8Init.h)
 
-target_link_libraries(main V8_TARGET)
+target_link_libraries(main PRIVATE V8_TARGET environment)
 
 target_compile_features(main PRIVATE cxx_std_14)
