@@ -53,19 +53,18 @@ void JSEnv::createIsolate() {
 void JSEnv::addFun(const std::string& id, const std::string& fun) {
 
 	std::vector<const std::string> args = { id, fun };
-	auto isolate = getIsolate();
-	executeFun(isolate, args, [&]() { return v8::Local<v8::Function>::New(isolate, addFun_); });
+	executeFun(addFun_, args);
 }
 
 const std::string JSEnv::mapDoc(const std::string& doc) {
 	std::vector<const std::string> args = { doc };
-	auto isolate = getIsolate();
-	return executeFun(isolate, args, [&]() { return v8::Local<v8::Function>::New(isolate, mapDoc_); });
+	// return executeFun(isolate, args, [&]() { return v8::Local<v8::Function>::New(isolate, mapDoc_); });
+	return executeFun(mapDoc_, args);
 }
 
-const std::string JSEnv::executeFun(v8::Isolate* isolate, std::vector<const std::string> argvRaw,
-                                    const std::function<v8::Local<v8::Function>()>& getGlobalfun) {
+const std::string JSEnv::executeFun(v8::Global<v8::Function>& globalFun, std::vector<const std::string> argvRaw) {
 
+	auto isolate = getIsolate();
 	v8::Isolate::Scope isolate_scope(isolate);
 	v8::Locker locker(isolate);
 
@@ -85,7 +84,7 @@ const std::string JSEnv::executeFun(v8::Isolate* isolate, std::vector<const std:
 
 		v8::Local<v8::Value> result;
 
-		auto fun = getGlobalfun();
+		auto fun = v8::Local<v8::Function>::New(isolate, globalFun);
 
 		v8::TryCatch try_catch(getIsolate());
 		if (!fun->Call(context, context->Global(), argv.size(), argv.data()).ToLocal(&result)) {

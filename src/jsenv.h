@@ -16,8 +16,8 @@ public:
 	void createIsolate();
 	void addFun(const std::string& id, const std::string& fun);
 	const std::string mapDoc(const std::string& doc);
-	const std::string executeFun(v8::Isolate* isolate, std::vector<const std::string> argvRaw,
-	                             const std::function<v8::Local<v8::Function>()>& getGlobalfun);
+
+	const std::string executeFun(v8::Global<v8::Function>& globalFun, std::vector<const std::string> argvRaw);
 
 	const std::string getId();
 
