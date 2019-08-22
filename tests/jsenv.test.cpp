@@ -47,4 +47,32 @@ TEST_CASE("JSEnv tests", "[jsenv]") {
 		REQUIRE(env2.mapDoc(doc) == R"([{"id":"id-1","result":[["my-id",1]]}])");
 		REQUIRE(env3.mapDoc(doc) == R"([{"id":"id-1","result":[["my-id",1]]}])");
 	}
+
+	SECTION("Returns error for bad function") {
+		auto id = std::string("id-1");
+		auto fun = std::string("function (doc) {throw new Error('boom')}");
+		auto doc = std::string(R"({"_id":"my-id","value":123})");
+
+		JSEnv env(std::string("context-id-4"));
+
+		env.addFun(id, fun);
+
+		REQUIRE(env.mapDoc(doc) == R"([{"id":"id-1","error":"Error: boom"}])");
+	}
+
+	SECTION("Cannot polute across isolates") {
+		auto id = std::string("id-1");
+		auto fun = std::string("function emit(key, value) {results.push([1, 1])} function (doc) {emit(doc._id, 1)}");
+		auto fun1 = std::string("function (doc) {emit(doc._id, 1)}");
+		auto doc = std::string(R"({"_id":"my-id","value":123})");
+
+		JSEnv env1(std::string("context-id-1"));
+		JSEnv env2(std::string("context-id-2"));
+
+		env1.addFun(id, fun);
+		env2.addFun(id, fun1);
+
+		REQUIRE(env1.mapDoc(doc) == R"([{"id":"id-1","result":[[1,1]]}])");
+		REQUIRE(env2.mapDoc(doc) == R"([{"id":"id-1","result":[["my-id",1]]}])");
+	}
 }

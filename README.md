@@ -12,6 +12,6 @@ mkdir build && cd build && cmake .. && make main && ./bin/main
 
 ```
 
-mkdir build && cd build && cmake .. && make test && ./bin/tests
+make test
 
 ```

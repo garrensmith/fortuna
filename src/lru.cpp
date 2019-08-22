@@ -10,25 +10,12 @@
 // License for the specific language governing permissions and limitations under
 // the License.
 
-#include "V8init.h"
-#include "jsenv.h"
-#include <cstdlib>
-#include <iostream>
+#pragma once
 
-int main(int argc, char* argv[]) {
-	std::cout << "Starting v8" << std::endl;
-	V8Init v8Init;
-	v8Init.initialisePlatform();
+class LRU {
+public:
+	LRU(unsigned int size) : size(size) {}
 
-	std::string id = "id1";
-	JSEnv env(id);
-
-	// env.hello(id);
-
-	// std::string fun = "function () { }";
-	auto fun = std::string("function (doc) {emit(doc._id, 1)}");
-	env.addFun(id, fun);
-
-	auto doc = std::string(R"({"_id":"my-id","value":123})");
-	auto out = env.mapDoc(doc);
-}
+private:
+	unsigned int size;
+};
