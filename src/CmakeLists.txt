@@ -1,23 +1,20 @@
 cmake_minimum_required(VERSION 3.15)
 
-# if (MSVC)
-# 	add_compile_options(/W3 /WX)
-# else()
-# 	add_compile_options(-W -Wall -Werror)
-# endif()
-
 add_executable(hello v8hello.cpp)
 target_link_libraries(hello V8_TARGET)
 
 target_compile_features(hello PRIVATE cxx_std_14)
 
+# This isn't quite right but can't find a better way for this to work
 include_directories(${CMAKE_BINARY_DIR}/js)
-add_library(environment STATIC environment.h environment.cpp)
-target_link_libraries(environment PRIVATE V8_TARGET)
-add_dependencies(environment JS_HEADERS)
 
-add_executable(main main.cpp V8Init.h)
+add_library(js_env STATIC jsenv.h jsenv.cpp)
+target_link_libraries(js_env PRIVATE V8_TARGET)
 
-target_link_libraries(main PRIVATE V8_TARGET environment)
+add_dependencies(js_env JS_HEADERS)
+
+add_executable(main main.cpp V8init.h)
+
+target_link_libraries(main PRIVATE V8_TARGET js_env)
 
 target_compile_features(main PRIVATE cxx_std_14)

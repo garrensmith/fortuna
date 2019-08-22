@@ -1,7 +1,10 @@
 cmake_minimum_required(VERSION 3.15)
 
-add_executable(runner runner.cpp)
+add_executable(tests runner.cpp jsenv.test.cpp)
 
-target_compile_features(runner PRIVATE cxx_std_14)
+target_compile_features(tests PRIVATE cxx_std_14)
 
-target_link_directories(runner PRIVATE include/catch.hpp)
+# target_link_directories(tests PRIVATE include/catch.hpp)
+target_include_directories(tests PUBLIC ./include)
+target_include_directories(tests PUBLIC ../src)
+target_link_libraries(tests PUBLIC V8_TARGET js_env)

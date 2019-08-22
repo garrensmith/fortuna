@@ -1,14 +1,12 @@
-#define CATCH_CONFIG_MAIN // This tells Catch to provide a main() - only do
-                          // this in one cpp file
+#define CATCH_CONFIG_RUNNER
+#include "V8init.h"
 #include "include/catch.hpp"
 
-unsigned int Factorial(unsigned int number) {
-    return number <= 1 ? number : Factorial(number - 1) * number;
-}
+int main(int argc, char* argv[]) {
+	V8Init v8init;
+	v8init.initialisePlatform();
 
-TEST_CASE("Factorials are computed", "[factorial]") {
-    REQUIRE(Factorial(1) == 1);
-    REQUIRE(Factorial(2) == 2);
-    REQUIRE(Factorial(3) == 6);
-    REQUIRE(Factorial(10) == 3628800);
+	int result = Catch::Session().run(argc, argv);
+
+	return result;
 }
