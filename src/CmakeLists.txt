@@ -8,7 +8,7 @@ target_compile_features(hello PRIVATE cxx_std_14)
 # This isn't quite right but can't find a better way for this to work
 include_directories(${CMAKE_BINARY_DIR}/js)
 
-add_library(js_env STATIC jsenv.h jsenv.cpp)
+add_library(js_env STATIC jsenv.h jsenv.cpp jsenv_manager.h jsenv_manager.cpp)
 target_link_libraries(js_env PRIVATE V8_TARGET)
 
 add_dependencies(js_env JS_HEADERS)
