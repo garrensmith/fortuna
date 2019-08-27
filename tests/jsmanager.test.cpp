@@ -41,6 +41,7 @@ TEST_CASE("JSEnvManager tests", "[jsenv]") {
 		auto id = std::string("id-1");
 		auto env1 = manager.getOrCreateEnv(id);
 		manager.deleteEnv(id);
-		REQUIRE_THROWS(manager.get(id));
+
+		REQUIRE(manager.hasEnv(id) == false);
 	}
 }

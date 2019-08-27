@@ -14,62 +14,67 @@
 #include <list>
 #include <unordered_map>
 
-
 template <typename Key, typename Value>
 class LRU {
 public:
-    explicit LRU(size_t capacity): capacity(capacity), keyAge(capacity) {};
+	explicit LRU(size_t capacity) : capacity(capacity), keyAge(capacity){};
 
-    void add(Key key, Value val) {
-        if (!hasKey(key)) {
-            if (size() == capacity) {
-                purge();
-            }
+	void add(Key key, Value val) {
+		if (!hasKey(key)) {
+			if (size() == capacity) {
+				purge();
+			}
 
-            auto it = keyAge.insert(keyAge.begin(), key);
-            items[key] = std::make_pair(val, it);
-            return;
-        }
+			auto it = keyAge.insert(keyAge.begin(), key);
+			items[key] = std::make_pair(val, it);
+			return;
+		}
 
-        moveToFront(key);
-    }
+		moveToFront(key);
+	}
 
-    Value get(Key key) {
-        if (!hasKey(key)) {
-            return Value();
-        }
+	Value get(Key key) {
+		if (!hasKey(key)) {
+			return Value();
+		}
 
-        auto iter = items.find(key);
-        moveToFront(key);
+		auto iter = items.find(key);
+		moveToFront(key);
 
-        return iter->second.first;
-    }
+		return iter->second.first;
+	}
 
-    size_t size() {
-        return keyAge.size();
-    }
+	size_t size() { return keyAge.size(); }
+
+	bool hasKey(const Key& key) { return !(items.find(key) == items.end()); }
+
+	void erase(const Key& key) {
+		if (!hasKey(key)) {
+			return;
+		}
+
+		auto pair = items.find(key);
+
+		keyAge.erase(pair->second.second);
+		items.erase(key);
+	}
 
 private:
-    typedef std::list<Key> KeyListType;
-    typedef std::pair<Value, typename KeyListType::iterator> KVPair;
+	typedef std::list<Key> KeyListType;
+	typedef std::pair<Value, typename KeyListType::iterator> KVPair;
 
-    KeyListType keyAge;
-    std::unordered_map<Key, KVPair> items;
-    size_t capacity;
+	KeyListType keyAge;
+	std::unordered_map<Key, KVPair> items;
+	size_t capacity;
 
-    void purge() {
-        auto key = keyAge.back();
-        items.erase(key);
-        keyAge.pop_back();
-    };
+	void purge() {
+		auto key = keyAge.back();
+		items.erase(key);
+		keyAge.pop_back();
+	};
 
-    void moveToFront(Key key) {
-        auto pair = items[key];
-        keyAge.splice(keyAge.begin(), keyAge, pair.second);
-
-    }
-
-    bool hasKey(const Key& key) {
-        return !(items.find(key) == items.end());
-    }
+	void moveToFront(Key key) {
+		auto pair = items[key];
+		keyAge.splice(keyAge.begin(), keyAge, pair.second);
+	}
 };

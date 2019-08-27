@@ -14,26 +14,31 @@
 #include "jsenv_manager.h"
 #include <unordered_map>
 
-JSEnv* JSEnvManager::createEnv(const std::string& id) {
-	jsEnvs[id] = std::make_unique<JSEnv>(id);
-	return jsEnvs.at(id).get();
+std::shared_ptr<JSEnv> JSEnvManager::createEnv(const std::string& id) {
+	auto jsEnv = std::make_shared<JSEnv>(id);
+	jsEnvs.add(id, jsEnv);
+
+	return jsEnv;
 }
 
-JSEnv* JSEnvManager::get(const std::string& id) {
-	return jsEnvs.at(id).get();
+std::shared_ptr<JSEnv> JSEnvManager::get(const std::string& id) {
+	return jsEnvs.get(id);
 }
 
-JSEnv* JSEnvManager::getOrCreateEnv(const std::string& id) {
-
-	if (jsEnvs.count(id) == 0) {
+std::shared_ptr<JSEnv> JSEnvManager::getOrCreateEnv(const std::string& id) {
+	if (!jsEnvs.hasKey(id)) {
 		return createEnv(id);
 	}
 
-	return jsEnvs[id].get();
+	return jsEnvs.get(id);
+}
+
+bool JSEnvManager::hasEnv(const std::string& id) {
+	return jsEnvs.hasKey(id);
 }
 
 void JSEnvManager::deleteEnv(const std::string& id) {
-	if (jsEnvs.count(id) == 0) {
+	if (!jsEnvs.hasKey(id)) {
 		return;
 	}
 

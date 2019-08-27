@@ -70,7 +70,6 @@ void JSEnv::addFun(const std::string& id, const std::string& fun) {
 
 const std::string JSEnv::mapDoc(const std::string& doc) {
 	std::vector<const std::string> args = { doc };
-	// return executeFun(isolate, args, [&]() { return v8::Local<v8::Function>::New(isolate, mapDoc_); });
 	return executeFun(mapDoc_, args);
 }
 

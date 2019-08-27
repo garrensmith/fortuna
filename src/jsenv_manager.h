@@ -12,19 +12,20 @@
 
 #pragma once
 
-#include <unordered_map>
 #include "jsenv.h"
+#include "lru.h"
 
 class JSEnvManager {
 public:
-	JSEnvManager() : jsEnvs() {}
+	JSEnvManager(size_t capacity = 100) : jsEnvs(capacity) {}
 
-	JSEnv* createEnv(const std::string& id);
-	JSEnv* get(const std::string& id);
-	JSEnv* getOrCreateEnv(const std::string& id);
+	std::shared_ptr<JSEnv> createEnv(const std::string& id);
+	std::shared_ptr<JSEnv> get(const std::string& id);
+	std::shared_ptr<JSEnv> getOrCreateEnv(const std::string& id);
 
 	void deleteEnv(const std::string& id);
+	bool hasEnv(const std::string& id);
 
 private:
-	std::unordered_map<std::string, std::unique_ptr<JSEnv>> jsEnvs;
+	LRU<std::string, std::shared_ptr<JSEnv>> jsEnvs;
 };
