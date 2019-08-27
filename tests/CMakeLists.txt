@@ -10,9 +10,9 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.14)
 
-add_executable(tests runner.cpp jsenv.test.cpp jsmanager.test.cpp)
+add_executable(tests runner.cpp jsenv.test.cpp jsmanager.test.cpp lru.test.cpp)
 
 target_compile_features(tests PRIVATE cxx_std_14)
 
