@@ -18,5 +18,5 @@ target_compile_features(tests PRIVATE cxx_std_14)
 
 # target_link_directories(tests PRIVATE include/catch.hpp)
 target_include_directories(tests PUBLIC ./include)
-target_include_directories(tests PUBLIC ../src)
+target_include_directories(tests PUBLIC ../jsenv)
 target_link_libraries(tests PUBLIC V8_TARGET js_env)

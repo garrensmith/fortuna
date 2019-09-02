@@ -19,9 +19,10 @@ set(EXECUTABLE_OUTPUT_PATH ${PROJECT_BINARY_DIR}/bin)
 include(GetDepotTools)
 
 add_subdirectory(deps)
-add_subdirectory(src)
+add_subdirectory(jsenv)
 add_subdirectory(tests)
 add_subdirectory(js)
+add_subdirectory(c_src)
 
 # set(CMAKE_CXX_STANDARD 14)
 # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
