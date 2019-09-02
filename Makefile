@@ -22,10 +22,11 @@ build: init
 
 clean:
 	rm -rf build
+	rm -rf priv
 
 test: init
 	make tests -C build
 	build/bin/tests
 
 format: 
-	clang-format -style=file -i src/*.cpp src/*.h tests/*.cpp
+	clang-format -style=file -i jsenv/*.cpp jsenv/*.h tests/*.cpp c_src/*.cpp c_src/*.h

@@ -12,32 +12,56 @@
 
 -module(fortuna).
 
--compile(no_native).
+% -compile(no_native).
 -on_load(init/0).
 
+-define(LIBNAME, fortuna).
+
 -export([
-    create_context/0
+    create_context/1,
+    acquire_map_context/1
 ]).
 
-create_context() ->
-    Out = nif_create_context(),
+create_context(Id) ->
+    Out = nif_create_context(Id),
     io:format("FROM NIF ~p ~n", [Out]).
+
+% fortuna:acquire_map_context(#{db_name => <<"db">>, sig => <<"123">>, map_funs => [<<"hello1">>, <<"hello2">>]}).
+
+acquire_map_context(CtxOpts) -> 
+    #{
+        db_name := DbName,
+        % ddoc_id := DDocId,
+        % language := Language,
+        sig := Sig,
+        % lib := Lib,
+        map_funs := MapFuns
+    } = CtxOpts,
+
+    Id = <<DbName/binary, Sig/binary>>,
+
+    Ctx = nif_acquire_map_context(Id, MapFuns),
+    {ok, Ctx}.
+% -callback release_map_context(context()) -> ok | {error, any()}.
+% k map_docs(context(), [doc()]) -> {ok, [result()]} | {error, any()}.
+
 
 
 init() ->
-    io:format("LOADING ~n").
-    % PrivDir = case code:priv_dir(?MODULE) of
-    %     {error, _} ->
-    %         EbinDir = filename:dirname(code:which(?MODULE)),
-    %         AppPath = filename:dirname(EbinDir),
-    %         filename:join(AppPath, "priv");
-    %     Path ->
-    %         Path
-    % end,
-    % erlang:load_nif(filename:join(PrivDir, "fortuna"), 0).
+    io:format("LOADING ~n"),
+    PrivDir = case code:priv_dir(?MODULE) of
+        {error, _} ->
+            EbinDir = filename:dirname(code:which(?MODULE)),
+            AppPath = filename:dirname(EbinDir),
+            filename:join(AppPath, "priv");
+        Path ->
+            Path
+    end,
+    erlang:load_nif(filename:join(PrivDir, ?LIBNAME), 0).
 
 
 -define(NOT_LOADED, erlang:nif_error({fortuna_nif_not_loaded, ?FILE, ?LINE})).
 
-nif_create_context() -> ?NOT_LOADED.
+nif_create_context(_id) -> ?NOT_LOADED.
+nif_acquire_map_context(_id, MapFuns) -> ?NOT_LOADED.
 
