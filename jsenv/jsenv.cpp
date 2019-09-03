@@ -62,6 +62,14 @@ void JSEnv::createIsolate() {
 	isolate = v8::Isolate::New(create_params);
 }
 
+void JSEnv::destroy() {
+	context_.Reset();
+	mapDoc_.Reset();
+	addFun_.Reset();
+	auto isolate = getIsolate();
+	isolate->Dispose();
+}
+
 void JSEnv::addFun(const std::string& id, const std::string& fun) {
 
 	std::vector<const std::string> args = { id, fun };
@@ -101,6 +109,8 @@ const std::string JSEnv::executeFun(v8::Global<v8::Function>& globalFun, std::ve
 		if (!fun->Call(context, context->Global(), argv.size(), argv.data()).ToLocal(&result)) {
 			v8::String::Utf8Value error(getIsolate(), try_catch.Exception());
 			log(*error);
+			auto err = std::string(*error);
+			throw err;
 		}
 
 		// return result;

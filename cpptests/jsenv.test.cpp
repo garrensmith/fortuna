@@ -22,12 +22,20 @@ TEST_CASE("JSEnv tests", "[jsenv]") {
 		env.addFun(id, fun);
 
 		auto doc = std::string(R"({"_id":"my-id","value":123})");
-		REQUIRE(env.mapDoc(doc) == R"([{"id":"id-1","result":[["my-id",1]]}])");
-		REQUIRE(env.mapDoc(doc) == R"([{"id":"id-1","result":[["my-id",1]]}])");
+		REQUIRE(env.mapDoc(doc) == R"([[["my-id",1]]])");
+		REQUIRE(env.mapDoc(doc) == R"([[["my-id",1]]])");
 
 		auto doc2 = std::string(R"({"_id":"my-id-2","value":567})");
-		REQUIRE(env.mapDoc(doc2) == R"([{"id":"id-1","result":[["my-id-2",1]]}])");
-		REQUIRE(env.mapDoc(doc2) == R"([{"id":"id-1","result":[["my-id-2",1]]}])");
+		REQUIRE(env.mapDoc(doc2) == R"([[["my-id-2",1]]])");
+		REQUIRE(env.mapDoc(doc2) == R"([[["my-id-2",1]]])");
+	};
+
+	SECTION("Throws errors when adding bad map functions") {
+		JSEnv env(std::string("context-id"));
+
+		auto id = std::string("id-1");
+		auto fun = std::string("function (doc) {emit(doc._id, 1)");
+		REQUIRE_THROWS_WITH(env.addFun(id, fun), Catch::Contains("Unexpected end"));
 	};
 
 	SECTION("Create multiple environemnts to map with") {
@@ -43,9 +51,9 @@ TEST_CASE("JSEnv tests", "[jsenv]") {
 		env2.addFun(id, fun);
 		env3.addFun(id, fun);
 
-		REQUIRE(env1.mapDoc(doc) == R"([{"id":"id-1","result":[["my-id",1]]}])");
-		REQUIRE(env2.mapDoc(doc) == R"([{"id":"id-1","result":[["my-id",1]]}])");
-		REQUIRE(env3.mapDoc(doc) == R"([{"id":"id-1","result":[["my-id",1]]}])");
+		REQUIRE(env1.mapDoc(doc) == R"([[["my-id",1]]])");
+		REQUIRE(env2.mapDoc(doc) == R"([[["my-id",1]]])");
+		REQUIRE(env3.mapDoc(doc) == R"([[["my-id",1]]])");
 	}
 
 	SECTION("Returns error for bad function") {
@@ -57,7 +65,7 @@ TEST_CASE("JSEnv tests", "[jsenv]") {
 
 		env.addFun(id, fun);
 
-		REQUIRE(env.mapDoc(doc) == R"([{"id":"id-1","error":"Error: boom"}])");
+		REQUIRE(env.mapDoc(doc) == R"([[]])");
 	}
 
 	SECTION("Cannot polute across isolates") {
@@ -72,7 +80,7 @@ TEST_CASE("JSEnv tests", "[jsenv]") {
 		env1.addFun(id, fun);
 		env2.addFun(id, fun1);
 
-		REQUIRE(env1.mapDoc(doc) == R"([{"id":"id-1","result":[[1,1]]}])");
-		REQUIRE(env2.mapDoc(doc) == R"([{"id":"id-1","result":[["my-id",1]]}])");
+		REQUIRE(env1.mapDoc(doc) == R"([[[1,1]]])");
+		REQUIRE(env2.mapDoc(doc) == R"([[["my-id",1]]])");
 	}
 }

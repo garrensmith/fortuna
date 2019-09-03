@@ -12,22 +12,11 @@
 
 cmake_minimum_required(VERSION 3.14)
 
-# This isn't quite right but can't find a better way for this to work
-include_directories(${CMAKE_BINARY_DIR}/js)
+add_executable(tests runner.cpp jsenv.test.cpp jsmanager.test.cpp lru.test.cpp)
 
-add_library(js_env STATIC
-        jsenv.h
-        jsenv.cpp
-        jsenv_manager.h
-        jsenv_manager.cpp
-        lru.h)
+target_compile_features(tests PRIVATE cxx_std_14)
 
-target_link_libraries(js_env PRIVATE V8_TARGET)
-
-add_dependencies(js_env JS_HEADERS)
-
-add_executable(main main.cpp V8init.h)
-
-target_link_libraries(main PRIVATE V8_TARGET js_env)
-
-target_compile_features(main PRIVATE cxx_std_14)
+# target_link_directories(tests PRIVATE include/catch.hpp)
+target_include_directories(tests PUBLIC ./include)
+target_include_directories(tests PUBLIC ../jsenv)
+target_link_libraries(tests PUBLIC V8_TARGET js_env)
