@@ -23,9 +23,6 @@ int main(int argc, char* argv[]) {
 	std::string id = "id1";
 	JSEnv env(id);
 
-	// env.hello(id);
-
-	// std::string fun = "function () { }";
 	auto fun = std::string("function (doc) {emit(doc._id, 1)}");
 	env.addFun(id, fun);
 

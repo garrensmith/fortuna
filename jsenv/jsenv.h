@@ -25,6 +25,12 @@ public:
 		createGlobalObject();
 	};
 
+	~JSEnv() {
+		destroy();
+	};
+
+	void destroy();
+
 	void createIsolate();
 	void addFun(const std::string& id, const std::string& fun);
 	const std::string mapDoc(const std::string& doc);
@@ -42,7 +48,6 @@ private:
 	v8::Global<v8::Function> mapDoc_;
 	v8::Global<v8::Function> addFun_;
 
-	void test(v8::Global<v8::Function> fun);
 	void createGlobalObject();
 	void setFunctions(v8::Isolate* isolate);
 	v8::Local<v8::Function> getFunction(v8::Isolate* isolate, const char* funNameRaw);

@@ -20,7 +20,7 @@ include(GetDepotTools)
 
 add_subdirectory(deps)
 add_subdirectory(jsenv)
-add_subdirectory(tests)
+add_subdirectory(cpptests)
 add_subdirectory(js)
 add_subdirectory(c_src)
 

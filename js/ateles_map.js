@@ -47,16 +47,18 @@ const mapFunRunner = (doc, mapFn) => {
 function mapDoc(doc_str) {
     const doc = JSON.parse(doc_str);
     const mapResults = Array.from(mapFuns, ([id, mapFun]) => {
-        const mapResult = { id };
+        // const mapResult = { id };
+        mapResult = [];
 
+        print(`mapping ${mapFun}`);
         const result = mapFunRunner(doc, mapFun);
         if (result.error) {
-            mapResult.error = result.error;
-        } else {
-            mapResult.result = result;
+            // mapResult.error = result.error;
+            return [];
+            // mapResult.push([]);
         }
 
-        return mapResult;
+        return result;
     });
 
     return JSON.stringify(mapResults);

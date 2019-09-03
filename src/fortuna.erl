@@ -11,44 +11,59 @@
 % the License.
 
 -module(fortuna).
+-behavior(couch_eval).
 
 % -compile(no_native).
 -on_load(init/0).
 
 -define(LIBNAME, fortuna).
 
+-include_lib("eunit/include/eunit.hrl").
+-include_lib("couch_mrview/include/couch_mrview.hrl").
+-include_lib("couch/include/couch_db.hrl").
+
 -export([
-    create_context/1,
-    acquire_map_context/1
+    acquire_map_context/1,
+    release_map_context/1,
+    map_docs/2
 ]).
 
-create_context(Id) ->
-    Out = nif_create_context(Id),
-    io:format("FROM NIF ~p ~n", [Out]).
-
-% fortuna:acquire_map_context(#{db_name => <<"db">>, sig => <<"123">>, map_funs => [<<"hello1">>, <<"hello2">>]}).
 
 acquire_map_context(CtxOpts) -> 
     #{
         db_name := DbName,
-        % ddoc_id := DDocId,
-        % language := Language,
         sig := Sig,
-        % lib := Lib,
         map_funs := MapFuns
     } = CtxOpts,
 
     Id = <<DbName/binary, Sig/binary>>,
-
-    Ctx = nif_acquire_map_context(Id, MapFuns),
-    {ok, Ctx}.
-% -callback release_map_context(context()) -> ok | {error, any()}.
-% k map_docs(context(), [doc()]) -> {ok, [result()]} | {error, any()}.
+    nif_acquire_map_context(Id, MapFuns),
+    {ok, #{context_id => Id}}.
 
 
+release_map_context(Ctx) ->
+    #{
+        context_id := Id
+    } = Ctx,
+    nif_release_context(Id).
+
+
+map_docs(Ctx, Docs) ->
+    #{
+        context_id := Id
+    } = Ctx,
+    {ok, lists:map(fun(Doc) ->
+        Json = couch_doc:to_json_obj(Doc, []),
+        StringJson = jiffy:encode(Json),
+        {ok, ResultString} = nif_map_doc(Id, StringJson),
+        Tupled = lists:map(fun(ViewResult) ->
+            lists:map(fun([K, V]) -> {K, V} end, ViewResult)
+        end, jiffy:decode(ResultString)),
+        {Doc#doc.id, Tupled}
+    end, Docs)}.
+    
 
 init() ->
-    io:format("LOADING ~n"),
     PrivDir = case code:priv_dir(?MODULE) of
         {error, _} ->
             EbinDir = filename:dirname(code:which(?MODULE)),
@@ -62,6 +77,7 @@ init() ->
 
 -define(NOT_LOADED, erlang:nif_error({fortuna_nif_not_loaded, ?FILE, ?LINE})).
 
-nif_create_context(_id) -> ?NOT_LOADED.
 nif_acquire_map_context(_id, MapFuns) -> ?NOT_LOADED.
+nif_release_context(_id) -> ?NOT_LOADED.
+nif_map_doc(_id, _Doc) -> ?NOT_LOADED.
 

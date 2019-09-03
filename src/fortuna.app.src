@@ -14,7 +14,14 @@
     {description, "Erlang bindings for Fortuna"},
     {vsn, "0.0.1"},
     {registered, []},
-    {applications, [kernel, stdlib]},
+     {applications, [
+        kernel,
+        stdlib,
+        config,
+        couch_log,
+        couch,
+        couch_mrview
+    ]},
     {maintainers, ["Garren Smith"]},
     {links, [{"GitHub", "https://github.com/garrensmith/fortuna"}]}
 ]}.

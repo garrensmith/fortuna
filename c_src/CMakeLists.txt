@@ -19,7 +19,7 @@ SET(ERLANG_INCLUDE_PATH "${ERL_NIF_INCLUDE_PATH}"
 message("erl_nif.h found at ${ERL_NIF_INCLUDE_PATH}")
 
 
-add_library(erl_nif MODULE main.cpp)
+add_library(erl_nif MODULE main.cpp atoms.h)
 target_link_libraries(erl_nif PRIVATE js_env)
 target_link_libraries(erl_nif PRIVATE V8_TARGET)
 target_include_directories(erl_nif PUBLIC ${ERLANG_INCLUDE_PATH})
@@ -35,7 +35,7 @@ SET(priv_dir ${CMAKE_SOURCE_DIR}/priv/)
 #   COMMENT "Copying to nif to ${priv_dir} directory")
 
 add_custom_command(TARGET erl_nif POST_BUILD 
-  COMMAND "${CMAKE_COMMAND}" -E copy_if_different 
+  COMMAND "${CMAKE_COMMAND}" -E copy 
      "$<TARGET_FILE:erl_nif>"
      "${priv_dir}/fortuna$<TARGET_FILE_SUFFIX:erl_nif>" 
   COMMENT "Copying nif to ${priv_dir} directory")
