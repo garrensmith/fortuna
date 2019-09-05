@@ -16,6 +16,7 @@ set(V8_HDRS ${V8_PATH}/include)
 set(V8_LIB ${V8_PATH}/out.gn/x64.release/obj)
 
 if (NOT EXISTS ${V8_HDRS})
+    message("fetching v8")
     execute_process(
         COMMAND fetch v8
         WORKING_DIRECTORY ${DEPS_PATH}
@@ -29,11 +30,15 @@ if (NOT EXISTS ${V8_HDRS})
 endif()
 
 if (NOT EXISTS ${V8_LIB}/libv8_libbase.a)
-    message("HERE")
+    message("Building v8")
 
 
     execute_process(
-        COMMAND ./tools/dev/v8gen.py x64.release -- v8_monolithic=true v8_use_external_startup_data=false use_custom_libcxx=false
+        COMMAND tools/dev/v8gen.py x64.release -- v8_monolithic=true v8_use_external_startup_data=false use_custom_libcxx=false
+        WORKING_DIRECTORY ${V8_PATH}
+    )
+
+    execute_process(
         COMMAND ninja -C out.gn/x64.release
         WORKING_DIRECTORY ${V8_PATH}
     )
