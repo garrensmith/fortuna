@@ -3,6 +3,8 @@ _build/
 deps/v8/
 deps/depot_tools
 deps/.cipd
+deps/.gclient
+deps/.gclient_entries
 priv/
 rebar.lock
 .eunit/

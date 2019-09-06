@@ -12,10 +12,11 @@
 
 set(depot_path ${CMAKE_SOURCE_DIR}/deps/depot_tools)
 
-include(ExternalProject)
-
+include(FetchContent)
+message("checking depot_tools")
 if (NOT EXISTS ${depot_path}/gclient)
-    ExternalProject_add(depot_tools
+    message("fetching depot_tools")
+    FetchContent_Populate(depot_tools
         GIT_REPOSITORY https://chromium.googlesource.com/chromium/tools/depot_tools.git
         SOURCE_DIR ${depot_path}
         CONFIGURE_COMMAND ""

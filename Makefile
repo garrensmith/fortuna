@@ -10,7 +10,7 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-.PHONY: init build clean format
+.PHONY: init build clean format clean-deps
 
 all: build
 
@@ -23,6 +23,15 @@ build: init
 clean:
 	rm -rf build
 	rm -rf priv
+
+clean-deps: clean
+	rm -rf deps/v8
+	rm -rf deps/.cipd
+	rm -rf deps/.gclient
+	rm -rf deps/.gclient_entries
+	rm -rf deps/depot_tools
+	
+
 
 test: init
 	make tests -C build

@@ -12,7 +12,7 @@
 
 cmake_minimum_required(VERSION 3.14)
 
-find_package(V8 HINTS ${CMAKE_SOURCE_DIR}/cmake)
+find_package(V8 HINTS ${CMAKE_SOURCE_DIR}/cmake REQUIRED)
 
 add_library(V8_TARGET INTERFACE)
 # add_dependencies(V8 V8Project)

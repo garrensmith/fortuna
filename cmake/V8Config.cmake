@@ -15,23 +15,24 @@ set(V8_PATH ${DEPS_PATH}/v8)
 set(V8_HDRS ${V8_PATH}/include)
 set(V8_LIB ${V8_PATH}/out.gn/x64.release/obj)
 
-if (NOT EXISTS ${V8_HDRS})
+message("Checking v8")
+
+if (NOT EXISTS ${V8_LIB}/libv8_libbase.a)
     message("fetching v8")
     execute_process(
         COMMAND fetch v8
         WORKING_DIRECTORY ${DEPS_PATH}
     )
 
+    message("checkout version 7.8.86")
+
     execute_process(
         COMMAND git checkout refs/tags/7.8.86
         COMMAND gclient sync -D
         WORKING_DIRECTORY ${V8_PATH}
     )
-endif()
 
-if (NOT EXISTS ${V8_LIB}/libv8_libbase.a)
     message("Building v8")
-
 
     execute_process(
         COMMAND tools/dev/v8gen.py x64.release -- v8_monolithic=true v8_use_external_startup_data=false use_custom_libcxx=false
@@ -42,8 +43,6 @@ if (NOT EXISTS ${V8_LIB}/libv8_libbase.a)
         COMMAND ninja -C out.gn/x64.release
         WORKING_DIRECTORY ${V8_PATH}
     )
-
-
 else()
     message("v8 built")
 endif()
